@@ -1,21 +1,25 @@
+const combine = false;
+const drawVelocity = true;
 
 const points = [];
 
 function makePoint() {
   return {
-    x: 100 + (200 * Math.random()),
-    y: 100 + (200 * Math.random()),
+    x: 250 + 500 * Math.random(),
+    y: 250 + 500 * Math.random(),
     vX: 0,
     vY: 0,
     fX: 0,
     fY: 0,
-    mass: 1,
+    mass: Math.random() * 5,
   };
 }
 
-for (let i = 0; i < 100; i += 1) {
+for (let i = 0; i < 900; i += 1) {
   points.push(makePoint());
 }
+
+let time = 0;
 
 function gravity(points) {
   const G = 0.001;
@@ -29,6 +33,17 @@ function gravity(points) {
       const uX = other.x - point.x;
       const uY = other.y - point.y;
       const d = Math.sqrt(uX * uX + uY * uY);
+      if (combine && (d * d) < 1) {
+        const mass = point.mass + other.mass;
+        // point.vX += other.vX * (other.mass / mass) + point.vX * (point.mass / mass);
+        // point.vY += other.vY * (other.mass / mass) + point.vY * (point.mass / mass);;
+        point.mass = mass;
+
+        points.splice(j, 1);
+        j += 1;
+
+        continue;
+      }
       const gravity = G / (d);
 
       const fX = gravity * (uX / d);
@@ -54,38 +69,54 @@ function update(points) {
   for (let i = 0; i < points.length; i += 1) {
     const point = points[i];
 
-    point.x += t * point.vX;
-    point.y += t * point.vY;
-
-    if (point.x > 400) {
-      point.x = 0;
-    } else if (point.x < 0) {
-      point.x = 400;
-    }
-
-    if (point.y > 400) {
-      point.y = 0;
-    } else if (point.y < 0) {
-      point.y = 400;
-    }
+    point.x += (t * point.vX);
+    point.y += (t * point.vY);
   }
 }
 
 function render(points) {
+  const width = canvas.width;
+  const height = canvas.height;
   const ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, 800, 800);
-  ctx.fillColor = "white";
+  ctx.fillStyle = "000000";
+  ctx.globalAlpha = 1.0;
+  ctx.fillRect(0, 0, width, height);
+  ctx.globalAlpha = 1.0;
 
   for (let i = 0; i < points.length; i += 1) {
     const point = points[i];
 
-    ctx.fillRect(point.x, point.y, 2, 2);
+    const x = width * (point.x / 1000);
+    const y = height * (point.y / 1000);
+    const radius = Math.max(1, point.mass);
+
+    if (drawVelocity) {
+      const t = 100;
+      ctx.strokeStyle = "#ffff00";
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + t * point.vX, y + t * point.vY);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
   }
 }
 
 const canvas = document.getElementById("canvas");
-canvas.width = 400;
-canvas.height = 400;
+//document.body.onmousemove = (event) => {
+//  points[0].x = event.clientX;
+//  points[0].y = event.clientY;
+//  points[0].mass = 1000;
+//};
+
+function resize() {
+  canvas.width = 2 * document.documentElement.clientWidth;
+  canvas.height = 2 * document.documentElement.clientHeight;
+}
 
 function step() {
   // main loop
@@ -97,4 +128,7 @@ function step() {
   requestAnimationFrame(step);
 }
 
+window.addEventListener("resize", resize, false);
+
+resize();
 step();
