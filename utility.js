@@ -1,11 +1,9 @@
 function randomPoint() {
   return {
-    x: 250 + 500 * Math.random(),
-    y: 250 + 500 * Math.random(),
+    x: 450 + 100 * Math.random(),
+    y: 450 + 100 * Math.random(),
     vX: 0,
     vY: 0,
-    fX: 0,
-    fY: 0,
-    mass: 0.001 * Math.random()
+    mass: 0.01 * Math.random()
   };
 }
