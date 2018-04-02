@@ -27,9 +27,11 @@ function resize() {
 function step() {
   // main loop
 
+  const tree = subdivide(0, 0, 1000, 1000, points);
+  // barnesHutGravity(tree, points);
   directSumGravity(points);
   update(points);
-  render(canvas, points);
+  render(canvas, tree);
 
   requestAnimationFrame(step);
 }

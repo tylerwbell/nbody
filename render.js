@@ -1,6 +1,6 @@
-const X = 0;
-const Y = 0;
-const scale = 1000;
+const X = 100;
+const Y = 100;
+const scale = 1100;
 
 function renderPoint(ctx, point) {
   const width = canvas.width;
@@ -48,6 +48,10 @@ function renderTree(ctx, tree) {
         renderPoint(ctx, point);
       }
     } else if (tree.nodes.type === TreeType) {
+      if (tree.width < 2) {
+        return;
+      }
+
       for (tree of tree.nodes.trees) {
         renderTree(ctx, tree);
       }
@@ -55,15 +59,14 @@ function renderTree(ctx, tree) {
   }
 }
 
-function render(canvas, points) {
+function render(canvas, tree) {
   const width = canvas.width;
   const height = canvas.height;
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "000000";
+  ctx.fillStyle = "#000000";
   // ctx.globalAlpha = 0.2;
   ctx.fillRect(0, 0, width, height);
   // ctx.globalAlpha = 1.0;
 
-  const tree = makeTree(0, 0, 1000, 1000, points);
   renderTree(ctx, tree);
 }

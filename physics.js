@@ -1,5 +1,6 @@
 ///
 ///
+///
 function forceBetween(a, b) {
   const uX = a.x - b.x;
   const uY = a.y - b.y;
@@ -13,27 +14,72 @@ function forceBetween(a, b) {
 }
 
 ///
+/// Barnes-Hut
+///
+
+///
 ///
 function affectGravity(body, points) {
   let aX = 0;
   let aY = 0;
-  for (let i = 0; i < points.length; j += 1) {
-    const point = point[i];
+  for (let i = 0; i < points.length; i += 1) {
+    const point = points[i];
     const f = forceBetween(body, point);
 
-    aX += f.x * point.mass;
-    aY += f.y * point.mass;
+    aX -= f.x * point.mass;
+    aY -= f.y * point.mass;
   }
 
-  point.vX += aX;
-  point.vY += aY;
+  body.vX += aX;
+  body.vY += aY;
 }
+
+function affectedPoints(point, arr, tree) {
+  if (tree.nodes === null) {
+    return;
+  }
+
+  if (tree.nodes.type === PointType) {
+    for (other of tree.nodes.points) {
+      if (other === point) {
+        continue;
+      }
+
+      arr.push(other);
+    }
+  } else if (tree.nodes.type === TreeType) {
+    const uX = point.x - tree.center.x;
+    const uY = point.y - tree.center.y;
+    const d = Math.sqrt(uX * uX + uY * uY);
+
+    if (tree.width / d < 0.5) {
+      arr.push(tree.center);
+    } else {
+      for (tree of tree.nodes.trees) {
+        affectedPoints(point, arr, tree);
+      }
+    }
+  }
+}
+
+///
+///
+function barnesHutGravity(tree, points) {
+  for (let i = 0; i < points.length; i += 1) {
+    const point = points[i];
+    const affectPoints = [];
+    affectedPoints(point, affectPoints, tree);
+    affectGravity(point, affectPoints);
+  }
+}
+
+///
+/// Direct Sum Algorithm
+///
 
 const _aX = Symbol();
 const _aY = Symbol();
 
-///
-///
 function directSumGravity(points) {
   for (let i = 0; i < points.length; i += 1) {
     const point = points[i];
