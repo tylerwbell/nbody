@@ -1,8 +1,11 @@
 const combine = false;
-const drawVelocity = true;
+const drawVelocity = false;
+const renderBodies = false;
+const useBarnesHut = true;
+const motionBlur = true;
 
 const points = [];
-for (let i = 0; i < 2000; i += 1) {
+for (let i = 0; i < 1500; i += 1) {
   points.push(randomPoint());
 }
 
@@ -17,7 +20,7 @@ function update(points) {
   }
 }
 
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById('canvas');
 
 function resize() {
   canvas.width = 2 * document.documentElement.clientWidth;
@@ -28,15 +31,20 @@ function step() {
   // main loop
 
   const tree = subdivide(0, 0, 1000, 1000, points);
-  // barnesHutGravity(tree, points);
-  directSumGravity(points);
+
+  if (useBarnesHut) {
+    barnesHutGravity(tree, points);
+  } else {
+    directSumGravity(points);
+  }
+
   update(points);
   render(canvas, tree);
 
   requestAnimationFrame(step);
 }
 
-window.addEventListener("resize", resize, false);
+window.addEventListener('resize', resize, false);
 
 resize();
 step();
