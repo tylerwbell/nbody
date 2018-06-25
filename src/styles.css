@@ -3,7 +3,7 @@ body {
   padding: 0;
 }
 
-.nav {
+.github {
   position: absolute;
   right: 20;
   top: 20;
@@ -19,9 +19,20 @@ body {
   padding-left: 20;
   padding-right: 20;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 20px;
 }
 
-.nav:hover {
-  color: #f3db3a;
+.github:hover {
+  border-color: #f3db3a;
+}
+
+@media screen and (max-width: 600px) {
+  .github {
+    top: 0;
+    left: 0;
+    right: 0;
+    border: none;
+    border-bottom: 1px solid;
+    border-radius: 0;
+  }
 }
