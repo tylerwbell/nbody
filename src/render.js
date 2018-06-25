@@ -19,7 +19,7 @@ function renderPoint(ctx, point) {
   }
 
   ctx.fillStyle = '#ffff00';
-  ctx.fillRect(x, y, 2, 2);
+  ctx.fillRect(x, y, 3, 3);
 
   // render bodies
   if (renderBodies) {

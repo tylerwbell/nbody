@@ -48,3 +48,34 @@ window.addEventListener('resize', resize, false);
 
 resize();
 step();
+
+// Update the FPS counter
+(function() {
+  function resize() {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    console.log(`${width}, ${height}`);
+    canvas.width = 2 * width;
+    canvas.height = 2 * height;
+  }
+  window.addEventListener('resize', resize, false);
+  resize();
+
+  let counter = document.getElementById('counter');
+  var lastLoop = new Date().getMilliseconds();
+  var count = 1;
+  var fps = 0;
+  let f = function() {
+    var currentLoop = new Date().getMilliseconds();
+    if (lastLoop > currentLoop) {
+      fps = count;
+      count = 1;
+    } else {
+      count += 1;
+    }
+    lastLoop = currentLoop;
+    counter.innerText = `${fps} fps`;
+    requestAnimationFrame(f);
+  };
+  f();
+})();
