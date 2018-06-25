@@ -2,3 +2,26 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.nav {
+  position: absolute;
+  right: 20;
+  top: 20;
+  color: #ffffff;
+  background-color: #262426;
+  text-decoration: none;
+  font-family: 'Gill Sans', 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica,
+    Arial, sans-serif;
+  border: 1px solid;
+  border-radius: 5px;
+  padding-top: 5;
+  padding-bottom: 5;
+  padding-left: 20;
+  padding-right: 20;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.nav:hover {
+  color: #f3db3a;
+}
